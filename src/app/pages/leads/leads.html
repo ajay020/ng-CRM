@@ -1,1 +1,112 @@
-<p>leads works!</p>
+<div class="page-header">
+  <div>
+    <h1>Leads</h1>
+    <p>Manage potential customers.</p>
+  </div>
+
+  <button type="button" (click)="openForm()">Add Lead</button>
+</div>
+
+@if (showForm) {
+  <div class="form-container">
+    <h2>{{ editingLeadId === null ? 'Add Lead' : 'Edit Lead' }}</h2>
+
+    <form [formGroup]="leadForm" (ngSubmit)="submit()">
+      <div class="form-group">
+        <label for="name">Name</label>
+
+        <input id="name" type="text" formControlName="name" />
+
+        @if (leadForm.controls.name.touched && leadForm.controls.name.invalid) {
+          <small>Name is required.</small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+
+        <input id="email" type="email" formControlName="email" />
+
+        @if (leadForm.controls.email.touched && leadForm.controls.email.invalid) {
+          <small>Enter a valid email.</small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone</label>
+
+        <input id="phone" type="tel" formControlName="phone" />
+      </div>
+
+      <div class="form-group">
+        <label for="company">Company</label>
+
+        <input id="company" type="text" formControlName="company" />
+      </div>
+
+      <div class="form-group">
+        <label for="source">Source</label>
+
+        <select id="source" formControlName="source">
+          @for (source of sources; track source) {
+            <option [value]="source">
+              {{ source }}
+            </option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="status">Status</label>
+
+        <select id="status" formControlName="status">
+          @for (status of statuses; track status) {
+            <option [value]="status">
+              {{ status }}
+            </option>
+          }
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit">
+          {{ editingLeadId === null ? 'Save Lead' : 'Update Lead' }}
+        </button>
+        <button type="button" (click)="closeForm()">Cancel</button>
+      </div>
+    </form>
+  </div>
+}
+
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Company</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Source</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (lead of leads(); track lead.id) {
+        <tr>
+          <td>{{ lead.name }}</td>
+          <td>{{ lead.company }}</td>
+          <td>{{ lead.email }}</td>
+          <td>{{ lead.phone }}</td>
+          <td>{{ lead.source }}</td>
+          <td>{{ lead.status }}</td>
+          <td>
+            <button type="button" (click)="openEditForm(lead)">Edit</button>
+            <button type="button" (click)="deleteLead(lead.id)">Delete</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
