@@ -1,1 +1,91 @@
-<p>customers works!</p>
+<div class="page-header">
+  <div>
+    <h1>Customers</h1>
+    <p>Manage your customers.</p>
+  </div>
+
+  <button type="button" (click)="openForm()">Add Customer</button>
+</div>
+
+@if (showForm) {
+  <div class="form-container">
+    <h2>
+      {{ editingCustomerId === null ? 'Add Customer' : 'Edit Customer' }}
+    </h2>
+
+    <form [formGroup]="customerForm" (ngSubmit)="submit()">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input id="name" type="text" formControlName="name" />
+
+        @if (customerForm.controls.name.touched && customerForm.controls.name.invalid) {
+          <small>Name is required.</small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email" />
+
+        @if (customerForm.controls.email.touched && customerForm.controls.email.invalid) {
+          <small>Enter a valid email.</small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input id="phone" type="tel" formControlName="phone" />
+      </div>
+
+      <div class="form-group">
+        <label for="company">Company</label>
+        <input id="company" type="text" formControlName="company" />
+      </div>
+
+      <div class="form-group">
+        <label for="industry">Industry</label>
+        <input id="industry" type="text" formControlName="industry" />
+      </div>
+
+      <div class="form-actions">
+        <button type="submit">
+          {{ editingCustomerId === null ? 'Save Customer' : 'Update Customer' }}
+        </button>
+        <button type="button" (click)="closeForm()">Cancel</button>
+      </div>
+    </form>
+  </div>
+}
+
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Company</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Industry</th>
+        <th>Created</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (customer of customers(); track customer.id) {
+        <tr>
+          <td>{{ customer.name }}</td>
+          <td>{{ customer.company }}</td>
+          <td>{{ customer.email }}</td>
+          <td>{{ customer.phone }}</td>
+          <td>{{ customer.industry }}</td>
+          <td>{{ customer.createdAt | date }}</td>
+          <td>
+            <button (click)="openEditForm(customer)" type="button">Edit</button>
+            <button (click)="deleteCustomer(customer.id)" type="button">Delete</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
