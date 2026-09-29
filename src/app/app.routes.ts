@@ -5,6 +5,7 @@ import { Leads } from './pages/leads/leads';
 import { Customers } from './pages/customers/customers';
 import { Deals } from './pages/deals/deals';
 import { Tasks } from './pages/tasks/tasks';
+import { LeadDetails } from './pages/leads/lead-details/lead-details';
 
 export const routes: Routes = [
   {
@@ -23,6 +24,10 @@ export const routes: Routes = [
       {
         path: 'leads',
         component: Leads,
+      },
+      {
+        path: 'leads/:id',
+        component: LeadDetails,
       },
       {
         path: 'customers',

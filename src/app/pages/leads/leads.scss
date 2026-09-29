@@ -79,3 +79,21 @@ form {
   display: flex;
   gap: 10px;
 }
+
+.search-container {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.search-container input,
+.search-container select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.search-container input {
+  flex: 1;
+}

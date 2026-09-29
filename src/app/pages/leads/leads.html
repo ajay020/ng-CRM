@@ -78,6 +78,24 @@
   </div>
 }
 
+<!-- Search  -->
+<div class="search-container">
+  <input
+    type="search"
+    placeholder="Search leads..."
+    [value]="searchTerm()"
+    (input)="searchTerm.set($any($event.target).value)"
+  />
+
+  <select [value]="selectedStatus()" (change)="selectedStatus.set($any($event.target).value)">
+    <option value="All">All Statuses</option>
+
+    @for (status of statuses; track status) {
+      <option [value]="status">{{ status }}</option>
+    }
+  </select>
+</div>
+
 <div class="table-container">
   <table>
     <thead>
@@ -93,9 +111,12 @@
     </thead>
 
     <tbody>
-      @for (lead of leads(); track lead.id) {
+      @for (lead of filteredLeads(); track lead.id) {
         <tr>
-          <td>{{ lead.name }}</td>
+          <!-- <td>{{ lead.name }}</td> -->
+          <a [routerLink]="['/leads', lead.id]">
+            {{ lead.name }}
+          </a>
           <td>{{ lead.company }}</td>
           <td>{{ lead.email }}</td>
           <td>{{ lead.phone }}</td>
