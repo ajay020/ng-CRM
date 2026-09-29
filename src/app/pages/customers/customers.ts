@@ -20,20 +20,24 @@ export class Customers {
 
   editingCustomerId: number | null = null;
 
-  filteredCustomers = computed(() => {
-    let search = this.searchTerm().toLocaleLowerCase().trim();
+  industries = ['Software', 'Marketing', 'Finance', 'Healthcare', 'Education', 'Retail', 'Other'];
 
-    if (!search) {
-      return this.customers();
-    }
+  selectedIndustry = signal('All');
+
+  filteredCustomers = computed(() => {
+    const search = this.searchTerm().toLowerCase().trim();
+    const industry = this.selectedIndustry();
 
     return this.customers().filter((customer) => {
-      return (
-        customer.name.includes(search) ||
-        customer.company.includes(search) ||
-        customer.email.includes(search) ||
-        customer.phone.includes(search)
-      );
+      const matchesSearch =
+        customer.name.toLowerCase().includes(search) ||
+        customer.email.toLowerCase().includes(search) ||
+        customer.company.toLowerCase().includes(search) ||
+        customer.phone.includes(search);
+
+      const matchesIndustry = industry === 'All' || customer.industry === industry;
+
+      return matchesSearch && matchesIndustry;
     });
   });
 

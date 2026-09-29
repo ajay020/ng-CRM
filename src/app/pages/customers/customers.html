@@ -65,6 +65,13 @@
     [value]="searchTerm()"
     (input)="searchTerm.set($any($event.target).value)"
   />
+  <select [value]="selectedIndustry()" (change)="selectedIndustry.set($any($event.target).value)">
+    <option value="All">All Industries</option>
+
+    @for (industry of industries; track industry) {
+      <option [value]="industry">{{ industry }}</option>
+    }
+  </select>
 </div>
 
 <div class="table-container">
