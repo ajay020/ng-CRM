@@ -1,0 +1,44 @@
+<a routerLink="/leads">← Back to Leads</a>
+
+@if (selectedLead) {
+  <div class="page-header">
+    <div>
+      <h1>{{ selectedLead.name }}</h1>
+      <p>{{ selectedLead.company }}</p>
+    </div>
+  </div>
+
+  <div class="details-card">
+    <div class="detail">
+      <span>Email</span>
+      <strong>{{ selectedLead.email }}</strong>
+    </div>
+
+    <div class="detail">
+      <span>Phone</span>
+      <strong>{{ selectedLead.phone }}</strong>
+    </div>
+
+    <div class="detail">
+      <span>Company</span>
+      <strong>{{ selectedLead.company }}</strong>
+    </div>
+
+    <div class="detail">
+      <span>Source</span>
+      <strong>{{ selectedLead.source }}</strong>
+    </div>
+
+    <div class="detail">
+      <span>Status</span>
+      <strong>{{ selectedLead.status }}</strong>
+    </div>
+
+    <div class="detail">
+      <span>Created</span>
+      <strong>{{ selectedLead.createdAt | date }}</strong>
+    </div>
+  </div>
+} @else {
+  <p>Lead not found.</p>
+}
