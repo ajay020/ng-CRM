@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { CustomerService } from '../../services/customer';
@@ -16,8 +16,26 @@ export class Customers {
   customers = this.customerService.getCustomers();
 
   showForm = false;
+  searchTerm = signal('');
 
   editingCustomerId: number | null = null;
+
+  filteredCustomers = computed(() => {
+    let search = this.searchTerm().toLocaleLowerCase().trim();
+
+    if (!search) {
+      return this.customers();
+    }
+
+    return this.customers().filter((customer) => {
+      return (
+        customer.name.includes(search) ||
+        customer.company.includes(search) ||
+        customer.email.includes(search) ||
+        customer.phone.includes(search)
+      );
+    });
+  });
 
   customerForm = new FormGroup({
     name: new FormControl('', {

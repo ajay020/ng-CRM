@@ -57,6 +57,16 @@
   </div>
 }
 
+<!-- Search  -->
+<div class="search-container">
+  <input
+    type="search"
+    placeholder="Search customers..."
+    [value]="searchTerm()"
+    (input)="searchTerm.set($any($event.target).value)"
+  />
+</div>
+
 <div class="table-container">
   <table>
     <thead>
@@ -72,7 +82,7 @@
     </thead>
 
     <tbody>
-      @for (customer of customers(); track customer.id) {
+      @for (customer of filteredCustomers(); track customer.id) {
         <tr>
           <td>{{ customer.name }}</td>
           <td>{{ customer.company }}</td>
