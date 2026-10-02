@@ -3,10 +3,11 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { DatePipe } from '@angular/common';
 import { CustomerService } from '../../services/customer';
 import { Customer } from '../../models/customer';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-customers',
-  imports: [DatePipe, ReactiveFormsModule],
+  imports: [DatePipe, ReactiveFormsModule, RouterLink],
   templateUrl: './customers.html',
   styleUrl: './customers.scss',
 })

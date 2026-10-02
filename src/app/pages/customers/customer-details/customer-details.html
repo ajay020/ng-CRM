@@ -1,0 +1,38 @@
+<a routerLink="/customers">← Back to Customers</a>
+
+@if (selectedCustomer) {
+  <div class="page-header">
+    <div>
+      <h1>{{ selectedCustomer.name }}</h1>
+      <p>{{ selectedCustomer.company }}</p>
+    </div>
+  </div>
+
+  <div class="details-card">
+    <div class="detail">
+      <span>Email</span>
+      <strong>{{ selectedCustomer.email }}</strong>
+    </div>
+
+    <div class="detail">
+      <span>Phone</span>
+      <strong>{{ selectedCustomer.phone }}</strong>
+    </div>
+
+    <div class="detail">
+      <span>Company</span>
+      <strong>{{ selectedCustomer.company }}</strong>
+    </div>
+
+    <div class="detail">
+      <span>Industry</span>
+      <strong>{{ selectedCustomer.industry }}</strong>
+    </div>
+    <div class="detail">
+      <span>Created</span>
+      <strong>{{ selectedCustomer.createdAt | date }}</strong>
+    </div>
+  </div>
+} @else {
+  <p>Customer not found.</p>
+}
