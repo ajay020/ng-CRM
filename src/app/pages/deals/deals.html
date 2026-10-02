@@ -1,1 +1,126 @@
-<p>deals works!</p>
+<div class="page-header">
+  <div>
+    <h1>Deals</h1>
+    <p>Track your sales opportunities.</p>
+  </div>
+  <button type="button" (click)="openForm()">Add Deal</button>
+</div>
+
+<!-- Edit form  -->
+@if (showForm) {
+  <div class="form-container">
+    <h2>
+      {{ editingDealId === null ? 'Add Deal' : 'Edit Deal' }}
+    </h2>
+
+    <form [formGroup]="dealForm" (ngSubmit)="submit()">
+      <div class="form-group">
+        <label for="title">Deal Title</label>
+        <input id="title" type="text" formControlName="title" />
+      </div>
+
+      <div class="form-group">
+        <label for="customer">Customer</label>
+        <input id="customer" type="text" formControlName="customer" />
+      </div>
+
+      <div class="form-group">
+        <label for="value">Deal Value</label>
+        <input id="value" type="number" formControlName="value" />
+      </div>
+
+      <div class="form-group">
+        <label for="stage">Stage</label>
+
+        <select id="stage" formControlName="stage">
+          @for (stage of stages; track stage) {
+            <option [value]="stage">{{ stage }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="expectedCloseDate"> Expected Close Date </label>
+
+        <input id="expectedCloseDate" type="date" formControlName="expectedCloseDate" />
+      </div>
+
+      <div class="form-actions">
+        <button type="submit">
+          {{ editingDealId === null ? 'Save Deal' : 'Update Deal' }}
+        </button>
+        <button type="button" (click)="closeForm()">Cancel</button>
+      </div>
+    </form>
+  </div>
+}
+
+<!-- Pipeline  -->
+<section class="pipeline">
+  @for (column of dealsByStage(); track column.stage) {
+    <div class="pipeline-column">
+      <div class="pipeline-header">
+        <div>
+          <h2>{{ column.stage }}</h2>
+          <small> {{ column.deals.length }} deal{{ column.deals.length === 1 ? '' : 's' }} </small>
+        </div>
+
+        <strong>
+          {{ column.totalValue | currency: 'INR' : 'symbol' : '1.0-0' }}
+        </strong>
+      </div>
+
+      <div class="pipeline-deals">
+        @for (deal of column.deals; track deal.id) {
+          <article class="deal-card" (click)="openEditForm(deal)">
+            <h3>{{ deal.title }}</h3>
+
+            <p>{{ deal.customer }}</p>
+
+            <strong>
+              {{ deal.value | currency: 'INR' : 'symbol' : '1.0-0' }}
+            </strong>
+
+            <small> Close: {{ deal.expectedCloseDate | date }} </small>
+          </article>
+        }
+
+        @if (column.deals.length === 0) {
+          <p class="empty-stage">No deals</p>
+        }
+      </div>
+    </div>
+  }
+</section>
+
+<!-- Table  -->
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Deal</th>
+        <th>Customer</th>
+        <th>Value</th>
+        <th>Stage</th>
+        <th>Expected Close</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (deal of deals(); track deal.id) {
+        <tr>
+          <td>{{ deal.title }}</td>
+          <td>{{ deal.customer }}</td>
+          <td>{{ deal.value | currency: 'INR' : 'symbol' : '1.0-0' }}</td>
+          <td>{{ deal.stage }}</td>
+          <td>{{ deal.expectedCloseDate | date }}</td>
+          <td>
+            <button type="button" (click)="openEditForm(deal)">Edit</button>
+            <button type="button" (click)="deleteDeal(deal.id)">Delete</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
