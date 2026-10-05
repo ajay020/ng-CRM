@@ -14,7 +14,7 @@
       {{ editingTaskId === null ? 'Add Task' : 'Edit Task' }}
     </h2>
     <form [formGroup]="taskForm" (ngSubmit)="submit()" class="task-form">
-      <div  class="form-group">
+      <div class="form-group">
         <label for="title">Title</label>
         <input id="title" type="text" formControlName="title" />
       </div>
@@ -62,8 +62,26 @@
   </div>
 }
 
+<!-- task search  -->
+<div class="task-search">
+  <input
+    type="search"
+    placeholder="Search tasks..."
+    [value]="searchTerm()"
+    (input)="searchTerm.set($any($event.target).value)"
+  />
+
+  <select [value]="selectedStatus()" (change)="selectedStatus.set($any($event.target).value)">
+    <option value="All">All Statuses</option>
+
+    @for (status of statuses; track status) {
+      <option [value]="status">{{ status }}</option>
+    }
+  </select>
+</div>
+
 <section class="tasks-list">
-  @for (task of tasks(); track task.id) {
+  @for (task of filteredTasks(); track task.id) {
     <article class="task-card">
       <div>
         <h2>{{ task.title }}</h2>
@@ -72,9 +90,29 @@
 
       <div>
         <span>{{ task.assignedTo }}</span>
-        <span>{{ task.status }}</span>
-        <span>{{ task.priority }}</span>
-        <span>Due: {{ task.dueDate | date }}</span>
+        <span
+          class="status"
+          [class.status-pending]="task.status === 'Pending'"
+          [class.status-progress]="task.status === 'In Progress'"
+          [class.status-completed]="task.status === 'Completed'"
+        >
+          {{ task.status }}
+        </span>
+        <span
+          class="priority"
+          [class.priority-high]="task.priority === 'High'"
+          [class.priority-medium]="task.priority === 'Medium'"
+          [class.priority-low]="task.priority === 'Low'"
+        >
+          {{ task.priority }}
+        </span>
+        <span [class.overdue]="isOverdue(task)">
+          Due: {{ task.dueDate | date }}
+
+          @if (isOverdue(task)) {
+            <strong>Overdue</strong>
+          }
+        </span>
       </div>
 
       <div class="task-actions">

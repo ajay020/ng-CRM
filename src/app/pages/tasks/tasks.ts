@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, computed, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TaskService } from '../../services/task';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -14,6 +14,25 @@ export class Tasks {
   private taskService = inject(TaskService);
 
   tasks = this.taskService.getTasks();
+
+  searchTerm = signal('');
+  selectedStatus = signal<TaskStatus | 'All'>('All');
+
+  filteredTasks = computed(() => {
+    const search = this.searchTerm().toLowerCase().trim();
+    const status = this.selectedStatus();
+
+    return this.tasks().filter((task) => {
+      const matchesSearch =
+        task.title.toLowerCase().includes(search) ||
+        task.description.toLowerCase().includes(search) ||
+        task.assignedTo.toLowerCase().includes(search);
+
+      const matchesStatus = status === 'All' || task.status === status;
+
+      return matchesSearch && matchesStatus;
+    });
+  });
 
   showForm = false;
   editingTaskId: number | null = null;
@@ -98,5 +117,9 @@ export class Tasks {
 
   deleteTask(id: number) {
     this.taskService.deleteTask(id);
+  }
+
+  isOverdue(task: Task) {
+    return task.status !== 'Completed' && new Date(task.dueDate) < new Date();
   }
 }

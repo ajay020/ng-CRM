@@ -59,3 +59,57 @@ form {
   display: flex;
   gap: 10px;
 }
+
+.priority {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.priority-high {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.priority-medium {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.priority-low {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-progress {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.status-completed {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.overdue {
+  color: #b91c1c;
+}
+
+.overdue strong {
+  margin-left: 6px;
+}
