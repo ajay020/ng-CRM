@@ -1,1 +1,95 @@
-<p>dashboard works!</p>
+<section class="dashboard-header">
+  <div>
+    <h1>Dashboard</h1>
+    <p>Overview of your CRM</p>
+  </div>
+</section>
+
+<section class="stats-grid">
+  <article class="stat-card">
+    <span>Total Leads</span>
+    <strong>{{ totalLeads() }}</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>Total Customers</span>
+    <strong>{{ totalCustomers() }}</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>Active Deals</span>
+    <strong>{{ activeDeals() }}</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>Won Deals</span>
+    <strong>{{ wonDeals() }}</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>Pipeline Value</span>
+    <strong>
+      {{ pipelineValue() | currency: 'INR' : 'symbol' : '1.0-0' }}
+    </strong>
+  </article>
+
+  <article class="stat-card">
+    <span>Pending Tasks</span>
+    <strong>{{ pendingTasks() }}</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>Overdue Tasks</span>
+    <strong>{{ overdueTasks() }}</strong>
+  </article>
+</section>
+
+<section class="recent-section">
+  <div class="section-header">
+    <h2>Recent Deals</h2>
+  </div>
+
+  <div class="recent-deals">
+    @for (deal of recentDeals(); track deal.id) {
+      <article class="recent-deal" routerLink="/deals">
+        <div>
+          <h3>{{ deal.title }}</h3>
+          <p>{{ deal.customer }}</p>
+        </div>
+
+        <div>
+          <strong>
+            {{ deal.value | currency: 'INR' : 'symbol' : '1.0-0' }}
+          </strong>
+
+          <span>{{ deal.stage }}</span>
+        </div>
+      </article>
+    }
+  </div>
+</section>
+
+<section class="recent-section">
+  <div class="section-header">
+    <h2>Overdue Tasks</h2>
+  </div>
+
+  <div class="recent-deals">
+    @for (task of overdueTaskList(); track task.id) {
+      <article class="recent-deal" routerLink="/tasks">
+        <div>
+          <h3>{{ task.title }}</h3>
+          <p>Assigned to {{ task.assignedTo }}</p>
+        </div>
+
+        <div>
+          <span class="overdue"> Due {{ task.dueDate | date }} </span>
+        </div>
+      </article>
+    }
+
+    @if (overdueTaskList().length === 0) {
+      <p class="no-overdue">No overdue tasks 🎉</p>
+    }
+  </div>
+</section>

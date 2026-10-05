@@ -1,0 +1,133 @@
+.dashboard-header {
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0 0 6px;
+    font-size: 28px;
+  }
+
+  p {
+    margin: 0;
+    color: #666;
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.stat-card {
+  padding: 20px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  span {
+    display: block;
+    margin-bottom: 10px;
+    color: #666;
+    font-size: 14px;
+  }
+
+  strong {
+    font-size: 28px;
+  }
+}
+
+.recent-section {
+  margin-top: 32px;
+}
+
+.section-header {
+  margin-bottom: 16px;
+
+  h2 {
+    margin: 0;
+    font-size: 20px;
+  }
+}
+
+.recent-deals {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.recent-deal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 20px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  h3 {
+    margin: 0 0 4px;
+    font-size: 16px;
+  }
+
+  p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+  }
+
+  > div:last-child {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  strong {
+    font-size: 15px;
+  }
+
+  span {
+    padding: 4px 8px;
+    border-radius: 12px;
+    background: #fef3c7;
+    color: #92400e;
+    font-size: 12px;
+    font-weight: 600;
+  }
+}
+
+.overdue {
+  padding: 4px 8px;
+  border-radius: 12px;
+  background: #fee2e2;
+  color: #b91c1c;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.no-overdue {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
