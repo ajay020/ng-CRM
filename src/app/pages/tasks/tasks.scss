@@ -133,3 +133,46 @@ form {
   text-align: center;
   color: #777;
 }
+
+.task-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 18px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  transition:
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  h2 {
+    margin: 0 0 8px;
+    font-size: 17px;
+  }
+
+  p {
+    margin: 0;
+    color: #666;
+    line-height: 1.5;
+  }
+
+  > div:nth-child(2) {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+.task-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
