@@ -121,4 +121,8 @@
       </div>
     </article>
   }
+
+  @if (filteredTasks().length === 0) {
+    <p class="no-tasks">No tasks found.</p>
+  }
 </section>
