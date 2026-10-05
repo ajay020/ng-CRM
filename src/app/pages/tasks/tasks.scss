@@ -1,0 +1,61 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-header h1 {
+  margin: 0;
+}
+
+.page-header p {
+  margin-top: 6px;
+  color: #666;
+}
+
+button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.form-container {
+  margin-bottom: 30px;
+  padding: 24px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.form-container h2 {
+  margin-top: 0;
+}
+
+form {
+  display: grid;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.form-group small {
+  color: #d33;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+}

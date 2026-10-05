@@ -1,1 +1,86 @@
-<p>tasks works!</p>
+<section class="page-header">
+  <div>
+    <h1>Tasks</h1>
+    <p>Manage your team's tasks</p>
+  </div>
+
+  <button type="button" (click)="openForm()">Add Task</button>
+</section>
+
+<!-- form  -->
+@if (showForm) {
+  <div class="form-container">
+    <h2>
+      {{ editingTaskId === null ? 'Add Task' : 'Edit Task' }}
+    </h2>
+    <form [formGroup]="taskForm" (ngSubmit)="submit()" class="task-form">
+      <div  class="form-group">
+        <label for="title">Title</label>
+        <input id="title" type="text" formControlName="title" />
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" formControlName="description"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="assignedTo">Assigned To</label>
+        <input id="assignedTo" type="text" formControlName="assignedTo" />
+      </div>
+
+      <div class="form-group">
+        <label for="status">Status</label>
+        <select id="status" formControlName="status">
+          @for (status of statuses; track status) {
+            <option [value]="status">{{ status }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="priority">Priority</label>
+        <select id="priority" formControlName="priority">
+          @for (priority of priorities; track priority) {
+            <option [value]="priority">{{ priority }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="dueDate">Due Date</label>
+        <input id="dueDate" type="date" formControlName="dueDate" />
+      </div>
+
+      <div class="form-actions">
+        <button type="submit">
+          {{ editingTaskId === null ? 'Add Task' : 'Update Task' }}
+        </button>
+        <button type="button" (click)="closeForm()">Cancel</button>
+      </div>
+    </form>
+  </div>
+}
+
+<section class="tasks-list">
+  @for (task of tasks(); track task.id) {
+    <article class="task-card">
+      <div>
+        <h2>{{ task.title }}</h2>
+        <p>{{ task.description }}</p>
+      </div>
+
+      <div>
+        <span>{{ task.assignedTo }}</span>
+        <span>{{ task.status }}</span>
+        <span>{{ task.priority }}</span>
+        <span>Due: {{ task.dueDate | date }}</span>
+      </div>
+
+      <div class="task-actions">
+        <button type="button" (click)="openEditForm(task)">Edit</button>
+        <button type="button" (click)="deleteTask(task.id)">Delete</button>
+      </div>
+    </article>
+  }
+</section>
