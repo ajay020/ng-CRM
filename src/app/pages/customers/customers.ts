@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { CustomerService } from '../../services/customer';
@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';
   templateUrl: './customers.html',
   styleUrl: './customers.scss',
 })
-export class Customers {
+export class Customers implements OnInit {
   private customerService = inject(CustomerService);
 
   customers = this.customerService.getCustomers();
@@ -19,7 +19,7 @@ export class Customers {
   showForm = false;
   searchTerm = signal('');
 
-  editingCustomerId: number | null = null;
+  editingCustomerId: string | null = null;
 
   industries = ['Software', 'Marketing', 'Finance', 'Healthcare', 'Education', 'Retail', 'Other'];
 
@@ -69,6 +69,10 @@ export class Customers {
     }),
   });
 
+  async ngOnInit() {
+    await this.customerService.loadCustomers();
+  }
+
   openForm() {
     this.showForm = true;
   }
@@ -76,14 +80,16 @@ export class Customers {
   closeForm() {
     this.showForm = false;
 
+    this.editingCustomerId = null;
+
     this.customerForm.reset();
   }
 
-  deleteCustomer(id: number) {
+  deleteCustomer(id: string) {
     this.customerService.deleteCustomer(id);
   }
 
-  submit() {
+  async submit() {
     if (this.customerForm.invalid) {
       this.customerForm.markAllAsTouched();
       return;
@@ -92,7 +98,7 @@ export class Customers {
     const data = this.customerForm.getRawValue();
 
     if (this.editingCustomerId == null) {
-      this.customerService.addCustomer(data);
+      await this.customerService.addCustomer(data);
     } else {
       this.customerService.updateCustomer(this.editingCustomerId, data);
     }

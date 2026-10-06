@@ -14,7 +14,7 @@ export class CustomerDetails {
   private route = inject(ActivatedRoute);
   private customerService = inject(CustomerService);
 
-  customerId = Number(this.route.snapshot.paramMap.get('id'));
+  customerId = this.route.snapshot.paramMap.get('id');
 
   customers = this.customerService.getCustomers();
 
