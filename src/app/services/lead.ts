@@ -1,52 +1,70 @@
 import { Injectable, signal } from '@angular/core';
 import { Lead } from '../models/lead';
-
+import { db } from '../firebase';
+import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
 @Injectable({
   providedIn: 'root',
 })
 export class LeadService {
-  private leads = signal<Lead[]>([
-    {
-      id: 1,
-      name: 'Rahul Sharma',
-      email: 'rahul@example.com',
-      phone: '9876543210',
-      company: 'ABC Solutions',
-      source: 'Website',
-      status: 'New',
-      createdAt: new Date(),
-    },
-    {
-      id: 2,
-      name: 'Priya Verma',
-      email: 'priya@example.com',
-      phone: '9123456789',
-      company: 'Tech World',
-      source: 'Referral',
-      status: 'Contacted',
-      createdAt: new Date(),
-    },
-  ]);
+  private leads = signal<Lead[]>([]);
+
+  async loadLeads() {
+    const snapshot = await getDocs(collection(db, 'leads'));
+
+    // console.log('FIRESTORE DOCUMENT COUNT:', snapshot.size);
+
+    const leads: Lead[] = snapshot.docs.map((doc) => {
+      const data = doc.data();
+
+      return {
+        id: doc.id,
+        name: data['name'],
+        email: data['email'],
+        phone: data['phone'],
+        company: data['company'],
+        source: data['source'],
+        status: data['status'],
+        createdAt: data['createdAt'].toDate(),
+      };
+    });
+
+    this.leads.set(leads);
+  }
 
   getLeads() {
     return this.leads.asReadonly();
   }
 
-  addLead(lead: Omit<Lead, 'id' | 'createdAt'>) {
+  async addLead(lead: Omit<Lead, 'id' | 'createdAt'>) {
+    const docRef = await addDoc(collection(db, 'leads'), {
+      ...lead,
+      createdAt: new Date(),
+    });
+
     const newLead: Lead = {
       ...lead,
-      id: Date.now(),
+      id: docRef.id,
       createdAt: new Date(),
     };
 
     this.leads.update((currentLeads) => [...currentLeads, newLead]);
   }
 
-  deleteLead(id: number) {
+  async deleteLead(id: string) {
+    const leadRef = doc(db, 'leads', id);
+
+    await deleteDoc(leadRef);
+
     this.leads.update((currentLeads) => currentLeads.filter((lead) => lead.id !== id));
   }
 
-  updateLead(id: number, updates: Omit<Lead, 'id' | 'createdAt'>) {
+  async updateLead(id: string, updates: Omit<Lead, 'id' | 'createdAt'>) {
+    const leadRef = doc(db, 'leads', id);
+
+    await updateDoc(leadRef, {
+      ...updates,
+    });
+
     this.leads.update((currentLeads) =>
       currentLeads.map((lead) => (lead.id === id ? { ...lead, ...updates } : lead)),
     );

@@ -1,4 +1,4 @@
-import { Component, inject, computed, signal } from '@angular/core';
+import { Component, inject, computed, signal, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LeadService } from '../../services/lead';
 import { LeadSource, LeadStatus, Lead } from '../../models/lead';
@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
   templateUrl: './leads.html',
   styleUrl: './leads.scss',
 })
-export class Leads {
+export class Leads implements OnInit {
   private leadService = inject(LeadService);
 
   leads = this.leadService.getLeads();
@@ -19,7 +19,7 @@ export class Leads {
 
   searchTerm = signal('');
 
-  editingLeadId: number | null = null;
+  editingLeadId: string | null = null;
 
   sources: LeadSource[] = ['Website', 'Referral', 'Social Media', 'Advertisement', 'Other'];
 
@@ -73,6 +73,10 @@ export class Leads {
     });
   });
 
+  async ngOnInit() {
+    await this.leadService.loadLeads();
+  }
+
   openForm() {
     this.showForm = true;
   }
@@ -88,7 +92,7 @@ export class Leads {
     });
   }
 
-  submit() {
+  async submit() {
     if (this.leadForm.invalid) {
       this.leadForm.markAllAsTouched();
       return;
@@ -97,16 +101,16 @@ export class Leads {
     const data = this.leadForm.getRawValue();
 
     if (this.editingLeadId === null) {
-      this.leadService.addLead(data);
+      await this.leadService.addLead(data);
     } else {
-      this.leadService.updateLead(this.editingLeadId, data);
+      await this.leadService.updateLead(this.editingLeadId, data);
     }
 
     this.closeForm();
   }
 
-  deleteLead(id: number) {
-    this.leadService.deleteLead(id);
+  async deleteLead(id: string) {
+    await this.leadService.deleteLead(id);
   }
 
   openEditForm(lead: Lead) {

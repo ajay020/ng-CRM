@@ -14,7 +14,7 @@ export class LeadDetails {
   private route = inject(ActivatedRoute);
   private leadService = inject(LeadService);
 
-  leadId = Number(this.route.snapshot.paramMap.get('id'));
+  leadId = this.route.snapshot.paramMap.get('id');
 
   lead = this.leadService.getLeads();
 

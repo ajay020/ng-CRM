@@ -97,3 +97,9 @@ form {
 .search-container input {
   flex: 1;
 }
+
+.lead-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}

@@ -7,6 +7,7 @@
   <button type="button" (click)="openForm()">Add Lead</button>
 </div>
 
+<!-- Add/Edit Form  -->
 @if (showForm) {
   <div class="form-container">
     <h2>{{ editingLeadId === null ? 'Add Lead' : 'Edit Lead' }}</h2>
@@ -96,6 +97,7 @@
   </select>
 </div>
 
+<!-- table  -->
 <div class="table-container">
   <table>
     <thead>
@@ -122,7 +124,7 @@
           <td>{{ lead.phone }}</td>
           <td>{{ lead.source }}</td>
           <td>{{ lead.status }}</td>
-          <td>
+          <td class="lead-actions">
             <button type="button" (click)="openEditForm(lead)">Edit</button>
             <button type="button" (click)="deleteLead(lead.id)">Delete</button>
           </td>

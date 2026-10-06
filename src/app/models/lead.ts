@@ -3,7 +3,7 @@ export type LeadStatus = 'New' | 'Contacted' | 'Qualified' | 'Lost';
 export type LeadSource = 'Website' | 'Referral' | 'Social Media' | 'Advertisement' | 'Other';
 
 export interface Lead {
-  id: number;
+  id: string;
   name: string;
   email: string;
   phone: string;
