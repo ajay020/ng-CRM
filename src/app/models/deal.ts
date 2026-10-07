@@ -1,7 +1,7 @@
 export type DealStage = 'New' | 'Qualified' | 'Proposal' | 'Negotiation' | 'Won' | 'Lost';
 
 export interface Deal {
-  id: number;
+  id: string;
   title: string;
   customer: string;
   value: number;

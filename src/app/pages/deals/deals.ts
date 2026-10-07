@@ -1,4 +1,4 @@
-import { Component, inject, computed } from '@angular/core';
+import { Component, inject, computed, OnInit } from '@angular/core';
 import { DealService } from '../../services/deal';
 import { DatePipe, CurrencyPipe } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -10,7 +10,7 @@ import { Deal, DealStage } from '../../models/deal';
   templateUrl: './deals.html',
   styleUrl: './deals.scss',
 })
-export class Deals {
+export class Deals implements OnInit {
   private dealService = inject(DealService);
   deals = this.dealService.getDeals();
 
@@ -31,7 +31,7 @@ export class Deals {
   stages: DealStage[] = ['New', 'Qualified', 'Proposal', 'Negotiation', 'Won', 'Lost'];
 
   showForm = false;
-  editingDealId: number | null = null;
+  editingDealId: string | null = null;
 
   dealForm = new FormGroup({
     title: new FormControl('', {
@@ -58,6 +58,10 @@ export class Deals {
       validators: [Validators.required],
     }),
   });
+
+  async ngOnInit() {
+    await this.dealService.loadDeals();
+  }
 
   openForm() {
     this.showForm = true;
@@ -108,7 +112,7 @@ export class Deals {
     });
   }
 
-  deleteDeal(id: number) {
+  deleteDeal(id: string) {
     this.dealService.deleteDeal(id);
   }
 }
