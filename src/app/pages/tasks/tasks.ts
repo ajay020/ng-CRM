@@ -1,4 +1,4 @@
-import { Component, inject, computed, signal } from '@angular/core';
+import { Component, inject, computed, signal, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TaskService } from '../../services/task';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -10,7 +10,7 @@ import { Task, TaskPriority, TaskStatus } from '../../models/task';
   templateUrl: './tasks.html',
   styleUrl: './tasks.scss',
 })
-export class Tasks {
+export class Tasks implements OnInit {
   private taskService = inject(TaskService);
 
   tasks = this.taskService.getTasks();
@@ -35,7 +35,7 @@ export class Tasks {
   });
 
   showForm = false;
-  editingTaskId: number | null = null;
+  editingTaskId: string | null = null;
 
   statuses: TaskStatus[] = ['Pending', 'In Progress', 'Completed'];
 
@@ -64,6 +64,10 @@ export class Tasks {
       validators: [Validators.required],
     }),
   });
+
+  async ngOnInit() {
+    await this.taskService.loadTasks();
+  }
 
   openForm() {
     this.showForm = true;
@@ -115,7 +119,7 @@ export class Tasks {
     });
   }
 
-  deleteTask(id: number) {
+  deleteTask(id: string) {
     this.taskService.deleteTask(id);
   }
 
