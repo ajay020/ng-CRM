@@ -6,6 +6,7 @@ import { TaskService } from '../../services/task';
 import { CurrencyPipe } from '@angular/common';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { AppDataService } from '../../services/app-data';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,6 +22,8 @@ export class Dashboard implements OnInit {
   private customerService = inject(CustomerService);
   private dealService = inject(DealService);
   private taskService = inject(TaskService);
+
+  private appDataService = inject(AppDataService);
 
   leads = this.leadService.getLeads();
   customers = this.customerService.getCustomers();
@@ -46,12 +49,7 @@ export class Dashboard implements OnInit {
 
   async ngOnInit() {
     try {
-      await Promise.all([
-        this.leadService.loadLeads(),
-        this.customerService.loadCustomers(),
-        this.dealService.loadDeals(),
-        this.taskService.loadTasks(),
-      ]);
+      await this.appDataService.loadAll();
     } catch (error) {
       console.error(error);
       this.error.set('Failed to load dashboard data.');
