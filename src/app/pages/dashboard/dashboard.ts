@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { LeadService } from '../../services/lead';
 import { CustomerService } from '../../services/customer';
 import { DealService } from '../../services/deal';
@@ -14,6 +14,9 @@ import { RouterLink } from '@angular/router';
   styleUrl: './dashboard.scss',
 })
 export class Dashboard implements OnInit {
+  loading = signal(true);
+  error = signal('');
+
   private leadService = inject(LeadService);
   private customerService = inject(CustomerService);
   private dealService = inject(DealService);
@@ -41,15 +44,21 @@ export class Dashboard implements OnInit {
 
   pendingTasks = computed(() => this.tasks().filter((task) => task.status !== 'Completed').length);
 
-
-async ngOnInit() {
-  await Promise.all([
-    this.leadService.loadLeads(),
-    this.customerService.loadCustomers(),
-    this.dealService.loadDeals(),
-    this.taskService.loadTasks(),
-  ]);
-}
+  async ngOnInit() {
+    try {
+      await Promise.all([
+        this.leadService.loadLeads(),
+        this.customerService.loadCustomers(),
+        this.dealService.loadDeals(),
+        this.taskService.loadTasks(),
+      ]);
+    } catch (error) {
+      console.error(error);
+      this.error.set('Failed to load dashboard data.');
+    } finally {
+      this.loading.set(false);
+    }
+  }
 
   overdueTasks = computed(
     () =>
