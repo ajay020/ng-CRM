@@ -9,11 +9,13 @@ import { LeadDetails } from './pages/leads/lead-details/lead-details';
 import { CustomerDetails } from './pages/customers/customer-details/customer-details';
 import { Login } from './pages/login/login';
 import { authGuard } from './guards/auth-guard';
+import { guestGuard } from './guards/guest-guard';
 
 export const routes: Routes = [
   {
     path: 'login',
     component: Login,
+    canActivate: [guestGuard],
   },
   {
     path: '',

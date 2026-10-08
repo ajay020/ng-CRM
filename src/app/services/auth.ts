@@ -7,10 +7,12 @@ import { auth } from '../firebase';
 })
 export class AuthService {
   currentUser = signal<User | null>(null);
+  authInitialized = signal(false);
 
   constructor() {
     onAuthStateChanged(auth, (user) => {
       this.currentUser.set(user);
+      this.authInitialized.set(true);
     });
   }
 
@@ -20,5 +22,19 @@ export class AuthService {
 
   async logout() {
     await signOut(auth);
+  }
+
+  waitForAuth(): Promise<User | null> {
+    return new Promise((resolve) => {
+      if (this.authInitialized()) {
+        resolve(this.currentUser());
+        return;
+      }
+
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        unsubscribe();
+        resolve(user);
+      });
+    });
   }
 }
