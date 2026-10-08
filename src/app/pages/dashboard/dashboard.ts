@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { LeadService } from '../../services/lead';
 import { CustomerService } from '../../services/customer';
 import { DealService } from '../../services/deal';
@@ -13,7 +13,7 @@ import { RouterLink } from '@angular/router';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
-export class Dashboard {
+export class Dashboard implements OnInit {
   private leadService = inject(LeadService);
   private customerService = inject(CustomerService);
   private dealService = inject(DealService);
@@ -40,6 +40,16 @@ export class Dashboard {
   );
 
   pendingTasks = computed(() => this.tasks().filter((task) => task.status !== 'Completed').length);
+
+
+async ngOnInit() {
+  await Promise.all([
+    this.leadService.loadLeads(),
+    this.customerService.loadCustomers(),
+    this.dealService.loadDeals(),
+    this.taskService.loadTasks(),
+  ]);
+}
 
   overdueTasks = computed(
     () =>
