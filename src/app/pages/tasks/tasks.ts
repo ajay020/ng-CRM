@@ -4,6 +4,7 @@ import { TaskService } from '../../services/task';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Task, TaskPriority, TaskStatus } from '../../models/task';
 import { CustomerService } from '../../services/customer';
+import { LeadService } from '../../services/lead';
 
 @Component({
   selector: 'app-tasks',
@@ -14,9 +15,11 @@ import { CustomerService } from '../../services/customer';
 export class Tasks implements OnInit {
   private taskService = inject(TaskService);
   private customerService = inject(CustomerService);
+  private leadService = inject(LeadService);
 
   tasks = this.taskService.getTasks();
   customers = this.customerService.getCustomers();
+  leads = this.leadService.getLeads();
 
   searchTerm = signal('');
   selectedStatus = signal<TaskStatus | 'All'>('All');
@@ -55,6 +58,9 @@ export class Tasks implements OnInit {
     customerId: new FormControl('', {
       nonNullable: true,
     }),
+    leadId: new FormControl('', {
+      nonNullable: true,
+    }),
     assignedTo: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required],
@@ -72,7 +78,11 @@ export class Tasks implements OnInit {
   });
 
   async ngOnInit() {
-    await Promise.all([this.taskService.loadTasks(), this.customerService.loadCustomers()]);
+    await Promise.all([
+      this.taskService.loadTasks(),
+      this.customerService.loadCustomers(),
+      this.leadService.loadLeads(),
+    ]);
   }
 
   openForm() {
@@ -119,6 +129,7 @@ export class Tasks implements OnInit {
       title: task.title,
       description: task.description,
       customerId: task.customerId ?? '',
+      leadId: task.leadId ?? '',
       assignedTo: task.assignedTo,
       status: task.status,
       priority: task.priority,
@@ -142,5 +153,27 @@ export class Tasks implements OnInit {
     const customer = this.customers().find((customer) => customer.id === customerId);
 
     return customer?.name ?? 'Unknown customer';
+  }
+
+  getLeadName(leadId: string | undefined): string {
+    if (!leadId) {
+      return '';
+    }
+
+    const lead = this.leads().find((lead) => lead.id === leadId);
+
+    return lead?.name ?? 'Unknown lead';
+  }
+
+  onCustomerChange() {
+    if (this.taskForm.controls.customerId.value) {
+      this.taskForm.controls.leadId.setValue('');
+    }
+  }
+
+  onLeadChange() {
+    if (this.taskForm.controls.leadId.value) {
+      this.taskForm.controls.customerId.setValue('');
+    }
   }
 }

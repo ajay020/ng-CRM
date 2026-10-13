@@ -26,6 +26,7 @@ export class TaskService {
         dueDate: data['dueDate'].toDate(),
         createdAt: data['createdAt'].toDate(),
         customerId: data['customerId'] ?? '',
+        leadId: data['leadId'] ?? '',
       };
     });
 

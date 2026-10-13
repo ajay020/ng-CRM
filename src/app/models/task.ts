@@ -12,4 +12,5 @@ export interface Task {
   dueDate: Date;
   createdAt: Date;
   customerId?: string;
+  leadId?: string;
 }

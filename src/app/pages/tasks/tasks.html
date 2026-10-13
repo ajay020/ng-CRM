@@ -27,11 +27,21 @@
       <div class="form-group">
         <label for="customerId">Related Customer (optional)</label>
 
-        <select id="customerId" formControlName="customerId">
+        <select id="customerId" (change)="onCustomerChange()" formControlName="customerId">
           <option value="">No customer</option>
 
           @for (customer of customers(); track customer.id) {
             <option [value]="customer.id">{{ customer.name }} — {{ customer.company }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="leadId">Related Lead (optional)</label>
+        <select id="leadId" (change)="onLeadChange()" formControlName="leadId">
+          <option value="">No lead</option>
+          @for (lead of leads(); track lead.id) {
+            <option [value]="lead.id">{{ lead.name }} — {{ lead.company }}</option>
           }
         </select>
       </div>
@@ -99,6 +109,9 @@
         <h2>{{ task.title }}</h2>
         @if (task.customerId) {
           <p>Customer: {{ getCustomerName(task.customerId) }}</p>
+        }
+        @if (task.leadId) {
+          <p>Lead: {{ getLeadName(task.leadId) }}</p>
         }
         <p>{{ task.description }}</p>
       </div>
