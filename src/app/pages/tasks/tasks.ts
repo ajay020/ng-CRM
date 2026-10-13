@@ -3,6 +3,7 @@ import { DatePipe } from '@angular/common';
 import { TaskService } from '../../services/task';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Task, TaskPriority, TaskStatus } from '../../models/task';
+import { CustomerService } from '../../services/customer';
 
 @Component({
   selector: 'app-tasks',
@@ -12,8 +13,10 @@ import { Task, TaskPriority, TaskStatus } from '../../models/task';
 })
 export class Tasks implements OnInit {
   private taskService = inject(TaskService);
+  private customerService = inject(CustomerService);
 
   tasks = this.taskService.getTasks();
+  customers = this.customerService.getCustomers();
 
   searchTerm = signal('');
   selectedStatus = signal<TaskStatus | 'All'>('All');
@@ -49,6 +52,9 @@ export class Tasks implements OnInit {
     description: new FormControl('', {
       nonNullable: true,
     }),
+    customerId: new FormControl('', {
+      nonNullable: true,
+    }),
     assignedTo: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required],
@@ -66,7 +72,7 @@ export class Tasks implements OnInit {
   });
 
   async ngOnInit() {
-    await this.taskService.loadTasks();
+    await Promise.all([this.taskService.loadTasks(), this.customerService.loadCustomers()]);
   }
 
   openForm() {
@@ -112,6 +118,7 @@ export class Tasks implements OnInit {
     this.taskForm.patchValue({
       title: task.title,
       description: task.description,
+      customerId: task.customerId ?? '',
       assignedTo: task.assignedTo,
       status: task.status,
       priority: task.priority,
@@ -125,5 +132,15 @@ export class Tasks implements OnInit {
 
   isOverdue(task: Task) {
     return task.status !== 'Completed' && new Date(task.dueDate) < new Date();
+  }
+
+  getCustomerName(customerId: string | undefined): string {
+    if (!customerId) {
+      return '';
+    }
+
+    const customer = this.customers().find((customer) => customer.id === customerId);
+
+    return customer?.name ?? 'Unknown customer';
   }
 }

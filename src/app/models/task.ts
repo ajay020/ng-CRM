@@ -11,4 +11,5 @@ export interface Task {
   priority: TaskPriority;
   dueDate: Date;
   createdAt: Date;
+  customerId?: string;
 }

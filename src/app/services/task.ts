@@ -25,6 +25,7 @@ export class TaskService {
         priority: data['priority'],
         dueDate: data['dueDate'].toDate(),
         createdAt: data['createdAt'].toDate(),
+        customerId: data['customerId'] ?? '',
       };
     });
 

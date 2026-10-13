@@ -25,6 +25,18 @@
       </div>
 
       <div class="form-group">
+        <label for="customerId">Related Customer (optional)</label>
+
+        <select id="customerId" formControlName="customerId">
+          <option value="">No customer</option>
+
+          @for (customer of customers(); track customer.id) {
+            <option [value]="customer.id">{{ customer.name }} — {{ customer.company }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
         <label for="assignedTo">Assigned To</label>
         <input id="assignedTo" type="text" formControlName="assignedTo" />
       </div>
@@ -85,6 +97,9 @@
     <article class="task-card">
       <div>
         <h2>{{ task.title }}</h2>
+        @if (task.customerId) {
+          <p>Customer: {{ getCustomerName(task.customerId) }}</p>
+        }
         <p>{{ task.description }}</p>
       </div>
 
