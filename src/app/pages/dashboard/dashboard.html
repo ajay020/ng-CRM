@@ -61,7 +61,7 @@
         <article class="recent-deal" routerLink="/deals">
           <div>
             <h3>{{ deal.title }}</h3>
-            <p>{{ deal.customer }}</p>
+            <p>{{ getCustomerName(deal.customerId) }}</p>
           </div>
 
           <div>

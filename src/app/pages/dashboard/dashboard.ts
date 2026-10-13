@@ -74,4 +74,10 @@ export class Dashboard implements OnInit {
       .filter((task) => task.status !== 'Completed' && new Date(task.dueDate) < new Date())
       .slice(0, 5),
   );
+
+  getCustomerName(customerId: string): string {
+    const customer = this.customers().find((customer) => customer.id === customerId);
+
+    return customer?.name ?? 'Unknown customer';
+  }
 }

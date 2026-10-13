@@ -3,6 +3,7 @@ import { DealService } from '../../services/deal';
 import { DatePipe, CurrencyPipe } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Deal, DealStage } from '../../models/deal';
+import { CustomerService } from '../../services/customer';
 
 @Component({
   selector: 'app-deals',
@@ -12,7 +13,10 @@ import { Deal, DealStage } from '../../models/deal';
 })
 export class Deals implements OnInit {
   private dealService = inject(DealService);
+  private customerService = inject(CustomerService);
+
   deals = this.dealService.getDeals();
+  customers = this.customerService.getCustomers();
 
   dealsByStage = computed(() =>
     this.stages.map((stage) => {
@@ -39,7 +43,7 @@ export class Deals implements OnInit {
       validators: [Validators.required],
     }),
 
-    customer: new FormControl('', {
+    customerId: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required],
     }),
@@ -60,7 +64,7 @@ export class Deals implements OnInit {
   });
 
   async ngOnInit() {
-    await this.dealService.loadDeals();
+    await Promise.all([this.customerService.loadCustomers(), this.dealService.loadDeals()]);
   }
 
   openForm() {
@@ -105,7 +109,7 @@ export class Deals implements OnInit {
 
     this.dealForm.patchValue({
       title: deal.title,
-      customer: deal.customer,
+      customerId: deal.customerId,
       value: deal.value,
       stage: deal.stage,
       expectedCloseDate: deal.expectedCloseDate.toISOString().split('T')[0],
@@ -114,5 +118,11 @@ export class Deals implements OnInit {
 
   deleteDeal(id: string) {
     this.dealService.deleteDeal(id);
+  }
+
+  getCustomerName(customerId: string): string {
+    const customer = this.customers().find((customer) => customer.id === customerId);
+
+    return customer?.name ?? 'Unknown customer';
   }
 }

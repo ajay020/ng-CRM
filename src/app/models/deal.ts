@@ -3,7 +3,7 @@ export type DealStage = 'New' | 'Qualified' | 'Proposal' | 'Negotiation' | 'Won'
 export interface Deal {
   id: string;
   title: string;
-  customer: string;
+  customerId: string;
   value: number;
   stage: DealStage;
   expectedCloseDate: Date;

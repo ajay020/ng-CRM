@@ -20,8 +20,15 @@
       </div>
 
       <div class="form-group">
-        <label for="customer">Customer</label>
-        <input id="customer" type="text" formControlName="customer" />
+        <label for="customerId">Customer</label>
+
+        <select id="customerId" formControlName="customerId">
+          <option value="">Select a customer</option>
+
+          @for (customer of customers(); track customer.id) {
+            <option [value]="customer.id">{{ customer.name }} — {{ customer.company }}</option>
+          }
+        </select>
       </div>
 
       <div class="form-group">
@@ -75,7 +82,7 @@
           <article class="deal-card" (click)="openEditForm(deal)">
             <h3>{{ deal.title }}</h3>
 
-            <p>{{ deal.customer }}</p>
+            <p>{{ getCustomerName(deal.customerId) }}</p>
 
             <strong>
               {{ deal.value | currency: 'INR' : 'symbol' : '1.0-0' }}
@@ -111,7 +118,7 @@
       @for (deal of deals(); track deal.id) {
         <tr>
           <td>{{ deal.title }}</td>
-          <td>{{ deal.customer }}</td>
+          <td>{{ getCustomerName(deal.customerId) }}</td>
           <td>{{ deal.value | currency: 'INR' : 'symbol' : '1.0-0' }}</td>
           <td>{{ deal.stage }}</td>
           <td>{{ deal.expectedCloseDate | date }}</td>

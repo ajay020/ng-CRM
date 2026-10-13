@@ -19,7 +19,7 @@ export class DealService {
       return {
         id: doc.id,
         title: data['title'],
-        customer: data['customer'],
+        customerId: data['customerId'],
         value: data['value'],
         stage: data['stage'],
         expectedCloseDate: data['expectedCloseDate'].toDate(),
