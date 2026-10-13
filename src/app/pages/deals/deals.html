@@ -25,6 +25,10 @@
         <select id="customerId" formControlName="customerId">
           <option value="">Select a customer</option>
 
+          @if (customers().length === 0) {
+            <option value="" disabled>No customers available — add a customer first</option>
+          }
+
           @for (customer of customers(); track customer.id) {
             <option [value]="customer.id">{{ customer.name }} — {{ customer.company }}</option>
           }
@@ -53,8 +57,11 @@
       </div>
 
       <div class="form-actions">
-        <button type="submit">
-          {{ editingDealId === null ? 'Save Deal' : 'Update Deal' }}
+        @if (errorMessage()) {
+          <p class="error-message">{{ errorMessage() }}</p>
+        }
+        <button type="submit" [disabled]="saving() || customers().length === 0">
+          {{ saving() ? 'Saving...' : 'Save Deal' }}
         </button>
         <button type="button" (click)="closeForm()">Cancel</button>
       </div>

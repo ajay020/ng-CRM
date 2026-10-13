@@ -1,4 +1,4 @@
-import { Component, inject, computed, OnInit } from '@angular/core';
+import { Component, inject, computed, OnInit, signal } from '@angular/core';
 import { DealService } from '../../services/deal';
 import { DatePipe, CurrencyPipe } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -36,6 +36,8 @@ export class Deals implements OnInit {
 
   showForm = false;
   editingDealId: string | null = null;
+  saving = signal(false);
+  errorMessage = signal('');
 
   dealForm = new FormGroup({
     title: new FormControl('', {
@@ -81,11 +83,14 @@ export class Deals implements OnInit {
     });
   }
 
-  submit() {
-    if (this.dealForm.invalid) {
+  async submit() {
+    if (this.dealForm.invalid || this.saving()) {
       this.dealForm.markAllAsTouched();
       return;
     }
+
+    this.saving.set(true);
+    this.errorMessage.set('');
 
     const data = this.dealForm.getRawValue();
 
@@ -94,13 +99,20 @@ export class Deals implements OnInit {
       expectedCloseDate: new Date(data.expectedCloseDate),
     };
 
-    if (this.editingDealId === null) {
-      this.dealService.addDeal(dealData);
-    } else {
-      this.dealService.updateDeal(this.editingDealId, dealData);
-    }
+    try {
+      if (this.editingDealId === null) {
+        await this.dealService.addDeal(dealData);
+      } else {
+        await this.dealService.updateDeal(this.editingDealId, dealData);
+      }
 
-    this.closeForm();
+      this.closeForm();
+    } catch (error) {
+      console.error(error);
+      this.errorMessage.set('Failed to save deal. Please try again.');
+    } finally {
+      this.saving.set(false);
+    }
   }
 
   openEditForm(deal: Deal) {
